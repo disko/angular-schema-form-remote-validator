@@ -1,0 +1,28 @@
+{
+  "name": "angular-schema-form-remote-validator",
+  "version": "0.1.0-dev",
+  "authors": [
+    "Andreas Kaiser <disko@binary-punks.com>"
+  ],
+  "description": "IBAN (International Bank Account Number) schema form field for angular-schema-form",
+  "main": "dist/angular-schema-form-remote-validator.js",
+  "keywords": [
+    "AngularJS",
+    "JSONSchema",
+    "angular-schema-form-add-on"
+  ],
+  "license": "BSD-2-Clause",
+  "homepage": "https://github.com/disko/angular-schema-form-remote-validator",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.5"
+  }
+}

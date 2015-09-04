@@ -15,16 +15,6 @@ angular.module('schemaForm').config (schemaFormProvider, schemaFormDecoratorsPro
   schemaFormDecoratorsProvider.createDirective 'remote-validator', 'directives/decorators/bootstrap/remote-validator/remote-validator.html'
   return
 
-# angular.module('schemaForm').factory 'remoteFactory', ($http, $q) ->
-#   factory =
-#     validate: (url, key, value) ->
-#       data = {}
-#       data[key] = value
-#       return $http.post url, data
-#         .then (result) ->
-#           return result.data
-#   return factory
-
 angular.module('schemaForm').directive 'remoteValidator', ($q, $http, $log) ->
 
   # see http://www.benlesh.com/2012/12/angular-js-custom-validation-via.html
@@ -63,20 +53,6 @@ angular.module('schemaForm').directive 'remoteValidator', ($q, $http, $log) ->
               scope.errMsg = response.data.msg
               return $q.reject(response.data.msg)
 
-
-
-
-        # deferred = $q.defer()
-        # remoteFactory.validate(url, key, value)
-        #   .then (response) ->
-        #     ngModel.$setValidity 'remote-validator', response.valid
-        #     if response.valid
-        #       # deferred.resolve()
-        #     else
-        #       # deferred.reject()
-        #     scope.$broadcast('schemaFormValidate')
-        # debugger
-        # return deferred.promise
 
       # add a parser that will process each time the value is
       # parsed into the model when the user updates it.

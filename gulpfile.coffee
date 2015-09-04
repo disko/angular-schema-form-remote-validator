@@ -22,7 +22,7 @@ gulp.task 'dist', ->
       quotes: true
     .pipe templateCache
       module: 'schemaForm'
-      root: 'directives/decorators/bootstrap/iban/'
+      root: 'directives/decorators/bootstrap/remote-validator/'
 
   js = gulp.src './src/*.coffee'
     .pipe(coffee().on('error', gutil.log))

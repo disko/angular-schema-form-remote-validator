@@ -1,12 +1,17 @@
-# angular-schema-form-remote-validator
+# WIP – DO NOT USE YET!
+
+## angular-schema-form-remote-validator
 
 ``angular-schema-form-remote-validator`` provides a schema form field for angular-schema-form. It provides remote validation.
 
 ## Usage
 
-1. Define a schema node of type ``string``.
-2. Define the corresponding form of type ``remote_validator``.
-3. Add an ``url`` property to the form definition containing the validator endpoint URL.
+1. Define a schema node of type ``string`` with format format ``remote-validator``.
+.
+2. Define the corresponding form:
+
+   1. Add an ``url`` property to the form definition containing the validator endpoint URL.
+   2. Add a ``validate`` property to the form definition containing the validator's name.
 
 ```
 schema = {
@@ -15,7 +20,8 @@ schema = {
   'properties': {
     'username': {
       'title': 'username',
-      'type': 'string'
+      'type': 'string',
+      'format': 'remote-validator'
     }
   },
   'required': ['username']
@@ -23,8 +29,8 @@ schema = {
 form = [
   {
     key: 'username',
-    type: 'remote_validator',
-    url: 'check-username'
+    url: '/validate',
+    validate: 'username'
   }
 ];
 ```
@@ -34,11 +40,15 @@ form = [
 ### Request
 
 Validator endpoints must accept ``POST`` requests.
-The request body will contain a simple JSON object with only a ``value`` attribute conatining the string to validate:
+The request body will contain a simple JSON object with a ``key: value`` pair.
+``key`` is the attribute to validate – the backend will typically chose the validation method based on ``key``.
+``value`` is the value to validate.
+
+For example validation of ``user1`` for being a valid ``username`` would send this JSON object to the backend.
 
 ```
 {
-  "value": "validate me"
+  "username": "user1"
 }
 ```
 
@@ -69,3 +79,5 @@ It can optionally contain a ``replace`` object with two properties (``what`` and
 ## Example
 
 See the included [example](example) folder.
+The example doesn't work without a backend, of course.
+An example backend implementation might be included in future releases.

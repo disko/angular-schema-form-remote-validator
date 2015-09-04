@@ -1,6 +1,6 @@
 angular.module('schemaForm').config (schemaFormProvider, schemaFormDecoratorsProvider, sfPathProvider) ->
 
-  remote_validator = (name, schema, options) ->
+  remoteValidator = (name, schema, options) ->
     if (schema.type == 'remote-validator') or (schema.type == 'string' and schema.format == 'remote-validator')
       f = schemaFormProvider.stdFormObj(name, schema, options)
       f.key = options.path
@@ -9,64 +9,108 @@ angular.module('schemaForm').config (schemaFormProvider, schemaFormDecoratorsPro
       return f
     return
 
-  schemaFormProvider.defaults.string.unshift remote_validator
+  schemaFormProvider.defaults.string.unshift remoteValidator
   #Add to the bootstrap directive
   schemaFormDecoratorsProvider.addMapping 'bootstrapDecorator', 'remote-validator', 'directives/decorators/bootstrap/remote-validator/remote-validator.html'
   schemaFormDecoratorsProvider.createDirective 'remote-validator', 'directives/decorators/bootstrap/remote-validator/remote-validator.html'
   return
 
+# angular.module('schemaForm').factory 'remoteFactory', ($http, $q) ->
+#   factory =
+#     validate: (url, key, value) ->
+#       data = {}
+#       data[key] = value
+#       return $http.post url, data
+#         .then (result) ->
+#           return result.data
+#   return factory
 
-angular.module('schemaForm').directive 'remote-validator', ->
+angular.module('schemaForm').directive 'remoteValidator', ($q, $http, $log) ->
 
   # see http://www.benlesh.com/2012/12/angular-js-custom-validation-via.html
+  remoteValidator =
 
-  validateIban = (value) ->
-  remote_validator =
+    restrict: 'A'  # restrict to an attribute type.
+    require: 'ngModel'  # element must have ng-model attribute
 
-    # restrict to an attribute type.
-    restrict: 'A'
+    link: (scope, element, attrs, ngModel) ->
+      # scope = the parent scope
+      # element = the element the directive is on
+      # attrs = a dictionary of attributes on the element
+      # ngModel = the controller for ngModel.
 
-    # element must have ng-model attribute
-    require: 'ngModel'
+      url = attrs.remoteValidator
+      key = attrs.remoteValidatorKey
 
-    # scope = the parent scope
-    # elem = the element the directive is on
-    # attr = a dictionary of attributes on the element
-    # ctrl = the controller for ngModel.
-    link: (scope, elem, attr, ctrl) ->
+      scope.errorMessage = ->
+        scope.errMsg || null
+
+      ngModel.$asyncValidators[key] = (value) ->
+        $log.info(value)
+        data = {}
+        data[key] = value
+        return $http
+          .post(url, data)
+          .then (response) ->
+            if response.data.valid
+              if ngModel.$modelValue && response.data && response.data.what && response.data.with
+                ngModel.$modelValue = ngModel.$modelValue.replace(response.data.what, response.data.with)
+                scope.$broadcast('schemaFormRedraw')
+              return $q.resolve()
+            else
+              context = scope
+              scope.form.validationMessage = {}
+              scope.errMsg = response.data.msg
+              return $q.reject(response.data.msg)
+
+
+
+
+        # deferred = $q.defer()
+        # remoteFactory.validate(url, key, value)
+        #   .then (response) ->
+        #     ngModel.$setValidity 'remote-validator', response.valid
+        #     if response.valid
+        #       # deferred.resolve()
+        #     else
+        #       # deferred.reject()
+        #     scope.$broadcast('schemaFormValidate')
+        # debugger
+        # return deferred.promise
 
       # add a parser that will process each time the value is
       # parsed into the model when the user updates it.
-      ctrl.$parsers.unshift (value) ->
+      # ngModel.$parsers.unshift (value) ->
+      #   # test and set the validity after update.
+      #   debugger
+      #   valid = scope.validate(value)
+      #   ngModel.$setValidity 'remote-validator', valid
 
-        # test and set the validity after update.
-        valid = IBAN.isValid(value)
-        ctrl.$setValidity 'remote-validator', valid
+      #   if valid
+      #     # value = IBAN.electronicFormat(value)
+      #     scope.$broadcast('schemaFormValidate')
 
-        if valid
-          value = IBAN.electronicFormat(value)
-          scope.$broadcast('schemaFormValidate')
-
-        # if it's valid, return the value to the model,
-        # otherwise return undefined.
-        if valid then value else undefined
+      #   # if it's valid, return the value to the model,
+      #   # otherwise return undefined.
+      #   if valid then value else undefined
 
       # add a formatter that will process each time
       # the value is updated on the DOM element.
-      ctrl.$formatters.unshift (value) ->
+      # ngModel.$formatters.unshift (value) ->
+      #   debugger
+      #   valid = false
 
-        valid = IBAN.isValid(value)
+      #   # validate.
+      #   ctrl.$setValidity 'remote-validator', valid
 
-        # validate.
-        ctrl.$setValidity 'remote-validator', valid
+      #   if valid
+      #     # value = IBAN.printFormat(value)
+      #     scope.$broadcast('schemaFormValidate')
 
-        if valid
-          value = IBAN.printFormat(value)
-          scope.$broadcast('schemaFormValidate')
+      #   # return the value or nothing will be written to the DOM.
+      #   value
 
-        # return the value or nothing will be written to the DOM.
-        value
 
       return
 
-  return remote_validator
+  return remoteValidator

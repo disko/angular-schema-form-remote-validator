@@ -76,8 +76,8 @@ It can optionally contain a ``replace`` object with two properties (``what`` and
 }
 ```
 
-## Example
+# Work In Progress
 
-See the included [example](example) folder.
-The example doesn't work without a backend, of course.
-An example backend implementation might be included in future releases.
+This package is wor in progress and should by no means be considered stable.
+Things will change!
+Use at your own risk.

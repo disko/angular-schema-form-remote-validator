@@ -78,6 +78,6 @@ It can optionally contain a ``replace`` object with two properties (``what`` and
 
 # Work In Progress
 
-This package is wor in progress and should by no means be considered stable.
+This package is work in progress and should by no means be considered stable.
 Things will change!
 Use at your own risk.

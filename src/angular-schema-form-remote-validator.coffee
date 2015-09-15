@@ -53,40 +53,6 @@ angular.module('schemaForm').directive 'remoteValidator', ($q, $http, $log) ->
               scope.errMsg = response.data.msg
               return $q.reject(response.data.msg)
 
-
-      # add a parser that will process each time the value is
-      # parsed into the model when the user updates it.
-      # ngModel.$parsers.unshift (value) ->
-      #   # test and set the validity after update.
-      #   debugger
-      #   valid = scope.validate(value)
-      #   ngModel.$setValidity 'remote-validator', valid
-
-      #   if valid
-      #     # value = IBAN.electronicFormat(value)
-      #     scope.$broadcast('schemaFormValidate')
-
-      #   # if it's valid, return the value to the model,
-      #   # otherwise return undefined.
-      #   if valid then value else undefined
-
-      # add a formatter that will process each time
-      # the value is updated on the DOM element.
-      # ngModel.$formatters.unshift (value) ->
-      #   debugger
-      #   valid = false
-
-      #   # validate.
-      #   ctrl.$setValidity 'remote-validator', valid
-
-      #   if valid
-      #     # value = IBAN.printFormat(value)
-      #     scope.$broadcast('schemaFormValidate')
-
-      #   # return the value or nothing will be written to the DOM.
-      #   value
-
-
       return
 
   return remoteValidator

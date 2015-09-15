@@ -1,6 +1,6 @@
 {
   "name": "angular-schema-form-remote-validator",
-  "version": "0.1.0",
+  "version": "0.2.0-dev",
   "description": "Schema form field with remote validation for angular-schema-form",
   "main": "dist/angular-schema-form-remote-validator.js",
   "scripts": {
